@@ -2,13 +2,13 @@
 
 include "bdd_connection.php";
 
-// //login user
-// $name = $_POST['name'];
-// $requete = $pdo->prepare("
-// INSERT INTO `User`(`Name`, `Role` , `DiscussionId`) VALUES (?,'USER',?)
-// ");
-// $requete->execute([$name, $idDiscussion]);
-
+//insert login user
+var_dump($idDiscussion);
+$name = $_POST['name'];
+$requete = $pdo->prepare("
+INSERT INTO `User`(`Name`, `Role` , `DiscussionId`) VALUES (?,'USER',?)
+");
+$requete->execute([$name, $idDiscussion]);
 
 // //insert message
 // $message = $_POST['message'];
@@ -36,9 +36,8 @@ if(!empty($idDiscussion))
 else
 {
     $exist = false;
-    if($_POST['creation'] == 'true')
+    if($_POST['mode'] == 'creation')
     {
-        var_dump($_POST);
         $requete = $pdo->prepare("
         INSERT INTO `Discussion`(`Name`) VALUES (?)
         ");
