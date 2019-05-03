@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Ven 03 Mai 2019 à 10:15
+-- Généré le :  Ven 03 Mai 2019 à 10:43
 -- Version du serveur :  5.7.26-0ubuntu0.16.04.1
 -- Version de PHP :  7.0.33-0ubuntu0.16.04.4
 
@@ -53,7 +53,8 @@ CREATE TABLE `User` (
 -- Index pour la table `Discussion`
 --
 ALTER TABLE `Discussion`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `AuthorId` (`AuthorId`);
 
 --
 -- Index pour la table `User`
@@ -75,6 +76,16 @@ ALTER TABLE `Discussion`
 --
 ALTER TABLE `User`
   MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- Contraintes pour les tables exportées
+--
+
+--
+-- Contraintes pour la table `Discussion`
+--
+ALTER TABLE `Discussion`
+  ADD CONSTRAINT `Discussion_ibfk_1` FOREIGN KEY (`AuthorId`) REFERENCES `User` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
