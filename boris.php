@@ -3,12 +3,34 @@
 include "bdd_connection.php";
 
 //insert login user
-var_dump($idDiscussion);
-$name = $_POST['name'];
+
+$mode = $_POST['mode'];
+$nameDiscussion = $_POST['nomDiscussion'];
+if($mode == 'create')
+{
+    $role = 'USER';
+
+    $requete = $pdo->prepare("
+    SELECT `Id` FROM `Discussion` WHERE `Name` = ?
+    ");
+    $requete->execute([$nameDiscussion]);
+    $idDiscussion = $requete->fetch();
+}
+else
+{
+    $role = 'ADMIN';
+    
+    $requete = $pdo->prepare("
+    INSERT INTO `Discussion`(`Name`) VALUES (?)
+    ");
+    $requete->execute([$nameDiscussion]);
+    $idDiscussion = $pdo->lastInsertId();
+}
+$pseudo = $_POST['pseudo'];
 $requete = $pdo->prepare("
-INSERT INTO `User`(`Name`, `Role` , `DiscussionId`) VALUES (?,'USER',?)
+INSERT INTO `User`(`Name`, `Role` , `DiscussionId`) VALUES (?,?,?)
 ");
-$requete->execute([$name, $idDiscussion]);
+$requete->execute([$pseudo, $role ,$idDiscussion]);
 
 // //insert message
 // $message = $_POST['message'];
@@ -18,34 +40,6 @@ $requete->execute([$name, $idDiscussion]);
 // INSERT INTO `Message`(`Content`, `AuthorId`, `DiscussionId`) VALUES (?,?,?)
 // ");
 // $requete->execute([$message,$idUser,$idDiscussion]);
-
-//verifier discussion existe
-
-$nameDiscussion = $_POST['nomDiscussion'];
-$nameDiscussion = strtoupper ( $nameDiscussion );
-$nameDiscussion=str_replace (' ', '-', $nameDiscussion );
-$requete = $pdo->prepare("
-SELECT `Id` FROM `Discussion` WHERE `Name`=?
-");
-$requete->execute([$nameDiscussion]);
-$idDiscussion = $requete->fetch();
-if(!empty($idDiscussion))
-{
-    $exist = true;
-}
-else
-{
-    $exist = false;
-    if($_POST['mode'] == 'creation')
-    {
-        $requete = $pdo->prepare("
-        INSERT INTO `Discussion`(`Name`) VALUES (?)
-        ");
-        $requete->execute([$nameDiscussion]);
-    }
-}
-$result=['exist'=>$exist, 'id'=>$idDiscussion];
-echo json_encode($result);
 
 
 

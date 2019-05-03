@@ -8,10 +8,10 @@ function creationDiscussion(e)
     let nameDiscussion = $("#discussion").val();
 
     $.ajax({
-        url: 'boris.php',
+        url: 'index.php',
         method: 'POST',
         dataType: 'json',
-        data: {mode: 'creation' ,nomDiscussion: nameDiscussion},
+        data: {nomDiscussion: nameDiscussion},
         success: function(data){
             if(data.exist)
             {
@@ -21,7 +21,7 @@ function creationDiscussion(e)
             else
             {
                 //ok on cree
-                window.location.href="pseudo.html?id="+data.id['Id'];
+                window.location.href="pseudo.html?id="+data.id['Id']+"&mode=create";
             }
         }
     });
@@ -34,10 +34,10 @@ function rejoindreDiscussion(e)
     let nameDiscussion = $("#discussion").val();
 
     $.ajax({
-        url: 'boris.php',
+        url: 'index.php',
         method: 'POST',
         dataType: 'json',
-        data: {mode: 'join',nomDiscussion: nameDiscussion},
+        data: {nomDiscussion: nameDiscussion},
         success: function(data){
             if(!data.exist)
             {
@@ -47,7 +47,7 @@ function rejoindreDiscussion(e)
             else
             {
                 //ok on cree
-                window.location.href="pseudo.html?id="+data.id['Id'];
+                window.location.href="pseudo.html?id="+data.id['Id']+"&mode=join";
             }
         }
     });
@@ -61,19 +61,26 @@ function log(e)
 
     let query = window.location.search.substring(1);
     let vars = query.split("&");
+    let pair=[];
+
+    let mode = 0;
     let idDiscussion = 0;
 
     for (var i=0;i<vars.length;i++) 
     {
-        var pair = vars[i].split("=");
-        if(pair[0] == 'id'){id = pair[1];}
+        pair.push(vars[i].split("="));
+        console.log(pair[i]);
+        if(pair[i][0] == 'id'){idDiscussion = pair[1];}
+        if(pair[i][0] == 'mode'){mode = pair[1];}
     }
+    console.log(mode);
+    console.log(idDiscussion);
 
     $.ajax({
         url: 'boris.php',
         method: 'POST',
         dataType: 'json',
-        data: {idDiscussion: idDiscussion, pseudo: pseudo},
+        data: {idDiscussion: idDiscussion, mode: mode},
         success: function(data){
             if(data.result)
             {

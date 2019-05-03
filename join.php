@@ -19,7 +19,14 @@ if(!empty($idDiscussion))
 else
 {
     $exist = false;
+    if($_POST['mode'] == 'creation')
+    {
+        $requete = $pdo->prepare("
+        INSERT INTO `Discussion`(`Name`) VALUES (?)
+        ");
+        $requete->execute([$nameDiscussion]);
+    }
 }
 $result=['exist'=>$exist, 'id'=>$idDiscussion];
-echo json_encode($result);
 
+include "pseudo.html";
