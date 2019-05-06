@@ -1,53 +1,38 @@
 'use_strict';
 
-
-function creationDiscussion(e)
+function verifyDiscussionExist(e)
 {
     e.preventDefault();
-    
     let nameDiscussion = $("#discussion").val();
+    let mode=$(this).attr("id");
 
     $.ajax({
-        url: 'index.php',
+        url: 'traitement.php',
         method: 'POST',
         dataType: 'json',
         data: {nomDiscussion: nameDiscussion},
         success: function(data){
             if(data.exist)
             {
-                //erreur discussion existe deja
-                $("#error").show();
+                if(mode == "login")
+                {
+                    window.location.href="pseudo.html?id="+data.id['Id']+"&mode=join";
+                }
+                else
+                {
+                    $("#error").show();
+                }
             }
             else
             {
-                //ok on cree
-                window.location.href="pseudo.html?id="+data.id['Id']+"&mode=create";
-            }
-        }
-    });
-}
-
-function rejoindreDiscussion(e)
-{
-    e.preventDefault();
-
-    let nameDiscussion = $("#discussion").val();
-
-    $.ajax({
-        url: 'index.php',
-        method: 'POST',
-        dataType: 'json',
-        data: {nomDiscussion: nameDiscussion},
-        success: function(data){
-            if(!data.exist)
-            {
-                //erreur discussion existe pas
-                $("#error").show();
-            }
-            else
-            {
-                //ok on cree
-                window.location.href="pseudo.html?id="+data.id['Id']+"&mode=join";
+                if(mode == "creation")
+                {
+                    window.location.href="pseudo.html?name="+nameDiscussion+"&mode=create";
+                }
+                else
+                {
+                    $("#error").show();
+                }
             }
         }
     });
@@ -65,35 +50,41 @@ function log(e)
 
     let mode = 0;
     let idDiscussion = 0;
+    let nameDiscussion = 0;
 
-    for (var i=0;i<vars.length;i++) 
+    for (var i=0;i<vars.length;i++)
     {
         pair.push(vars[i].split("="));
-        console.log(pair[i]);
-        if(pair[i][0] == 'id'){idDiscussion = pair[1];}
-        if(pair[i][0] == 'mode'){mode = pair[1];}
+        if(pair[i][0] == 'id'){idDiscussion = pair[i][1];}
+        if(pair[i][0] == 'name'){nameDiscussion = pair[i][1];}
+        if(pair[i][0] == 'mode'){mode = pair[i][1];}
     }
-    console.log(mode);
-    console.log(idDiscussion);
 
-    $.ajax({
-        url: 'boris.php',
-        method: 'POST',
-        dataType: 'json',
-        data: {idDiscussion: idDiscussion, mode: mode},
-        success: function(data){
-            if(data.result)
-            {
-                window.location.href="message.html?idDiscussion="+idDiscussion+"&idUser="+idUser;
+    console.log(idDiscussion);
+    console.log(nameDiscussion);
+    console.log(mode);
+
+    if(pseudo != '')
+    {
+        $.ajax({
+            url: 'boris.php',
+            method: 'POST',
+            dataType: 'json',
+            data: {idDiscussion: idDiscussion, nomDiscussion: nameDiscussion ,pseudo: pseudo,mode: mode},
+            success: function(data){
+                if(data.idUser && data.idUser)
+                {
+                    window.location.href="message.php?idDiscussion="+data.idDiscussion+"&idUser="+data.idUser;
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 $(document).ready(function()
 {
     $("#error").hide();
-    $("#creation").on("submit",creationDiscussion);
-    $("#login").on("submit",rejoindreDiscussion);
+    $("#creation").on("submit",verifyDiscussionExist);
+    $("#login").on("submit",verifyDiscussionExist);
     $("#form-pseudo").on("submit",log);
 });

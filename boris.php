@@ -1,36 +1,36 @@
 <?php
 
-include "bdd_connection.php";
-
-//insert login user
-
-$mode = $_POST['mode'];
-$nameDiscussion = $_POST['nomDiscussion'];
-if($mode == 'create')
+if(array_key_exists('mode',$_POST) && array_key_exists('idDiscussion',$_POST) && array_key_exists('nomDiscussion',$_POST))
 {
-    $role = 'USER';
+    include "bdd_connection.php";
 
+    $mode = $_POST['mode'];
+    if($mode == 'join')
+    {
+        $role = 'USER';
+        $idDiscussion = $_POST['idDiscussion'];
+    }
+    else
+    {
+        $role = 'ADMIN';
+        $nameDiscussion = $_POST['nomDiscussion'];
+
+        $requete = $pdo->prepare("
+        INSERT INTO `Discussion`(`Name`) VALUES (?)
+        ");
+        $requete->execute([$nameDiscussion]);
+        $idDiscussion = $pdo->lastInsertId();
+    }
+    $pseudo = $_POST['pseudo'];
     $requete = $pdo->prepare("
-    SELECT `Id` FROM `Discussion` WHERE `Name` = ?
+    INSERT INTO `User`(`Name`, `Role` , `DiscussionId`) VALUES (?,?,?)
     ");
-    $requete->execute([$nameDiscussion]);
-    $idDiscussion = $requete->fetch();
+    $requete->execute([$pseudo, $role ,$idDiscussion]);
+    $idUser = $pdo->lastInsertId();
+    echo json_encode(['idDiscussion' => $idDiscussion, 'idUser' => $idUser]);
 }
-else
-{
-    $role = 'ADMIN';
-    
-    $requete = $pdo->prepare("
-    INSERT INTO `Discussion`(`Name`) VALUES (?)
-    ");
-    $requete->execute([$nameDiscussion]);
-    $idDiscussion = $pdo->lastInsertId();
-}
-$pseudo = $_POST['pseudo'];
-$requete = $pdo->prepare("
-INSERT INTO `User`(`Name`, `Role` , `DiscussionId`) VALUES (?,?,?)
-");
-$requete->execute([$pseudo, $role ,$idDiscussion]);
+
+
 
 // //insert message
 // $message = $_POST['message'];
