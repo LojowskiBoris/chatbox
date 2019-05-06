@@ -45,7 +45,8 @@ a {
     width:430px;
     border:1px solid #ACD8F0;
     overflow:auto; 
-    margin-top: 15%;}
+    margin-top: 15%;
+    }
 .recu{
     float:right;
     margin: 2%;
@@ -65,6 +66,13 @@ a {
     border: 3px solid silver ;
 
 } 
+.clear{
+    clear: both;
+}
+#msg1{
+    
+
+}
   
 #usermsg {
     margin-top: 80%;
