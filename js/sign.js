@@ -21,7 +21,7 @@ function sign(e)
             success: function(data){
                 if(data.result)
                 {
-                    window.location.href="login.html";
+                    window.location.href="login.phtml";
                 }
                 else
                 {

@@ -3,7 +3,7 @@
 session_start();
 if(!isset($_SESSION['idUser']))
 {
-    header('Location: login.html');
+    header('Location: login.phtml');
     exit();
 }
 else

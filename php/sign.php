@@ -18,9 +18,10 @@ function hashPassword($password)
     return crypt($password, $salt);
 }
 
-$result =['result' => false];
+
 if(array_key_exists('mail',$_POST) && array_key_exists('mdp',$_POST) && !empty($_POST['mail']) && !empty($_POST['mdp']))
 {
+    $result =['result' => false];
     include "bdd_connection.php";
 
     $mail = $_POST['mail'];
@@ -40,5 +41,19 @@ if(array_key_exists('mail',$_POST) && array_key_exists('mdp',$_POST) && !empty($
         $requete->execute([$mail,$mdp]);
         $result =['result' => true];
     }
+    echo json_encode($result);
 }
-echo json_encode($result);
+else
+{
+    session_start();
+    if(!isset($_SESSION['idUser']))
+    {
+        header('Location: ../login.php');
+        exit();
+    }
+    else
+    {
+        include '../sign.phtml';
+    }
+}
+

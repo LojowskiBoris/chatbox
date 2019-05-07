@@ -1,8 +1,5 @@
 <?php
 
-session_start();
-var_dump($_SESSION);
-
 // if(array_key_exists('idUser') &&array_key_exists('idDiscussion'))
 // {
 //     if(!isset($_SESSION['idUser']) && !isset($_SESSION['idDiscussion']))

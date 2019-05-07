@@ -20,7 +20,7 @@ function login(e)
             success: function(data){
                 if(data.result)
                 {
-                    window.location.href="index.html";
+                    window.location.href="index.php";
                 }
                 else
                 {

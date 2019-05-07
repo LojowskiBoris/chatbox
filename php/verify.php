@@ -9,19 +9,33 @@ if(!empty($_POST) && array_key_exists('nomDiscussion', $_POST))
 	$nameDiscussion = strtoupper ( $nameDiscussion );
 	$nameDiscussion=str_replace (' ', '-', $nameDiscussion );
 	$requete = $pdo->prepare("
-	SELECT `Id` FROM `Discussion` WHERE `Name`=?
-	");
+		SELECT `Id` FROM `Discussion` WHERE `Name`=?
+		");
 	$requete->execute([$nameDiscussion]);
 	$idDiscussion = $requete->fetch();
 	if(!empty($idDiscussion))
 	{
-	    $exist = true;
+		$exist = true;
 	}
 	else
 	{
-	    $exist = false;
+		$exist = false;
 	}
 	$result=['exist'=>$exist, 'id'=>$idDiscussion];
 	echo json_encode($result);
+}
+else
+{
+	session_start();
+	if(!isset($_SESSION['idUser']))
+	{
+		header('Location: ../login.php');
+		exit();
+	}
+	else
+	{
+		var_dump($_GET);
+		include '../join.phtml';
+	}
 }
 
